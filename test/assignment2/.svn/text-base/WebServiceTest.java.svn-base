@@ -1,0 +1,69 @@
+package assignment2;
+
+import junit.framework.TestCase;
+
+public class WebServiceTest extends TestCase {
+
+    private WebService webService;
+
+    public void setUp() {
+        webService = new WebService();
+    }
+
+    public void testCanary() {
+        assertTrue(true);
+    }
+    
+    public void testGetStockPriceForAValidTicker() throws Exception {
+        assertTrue(webService.getStockPrice("GOOG") > 0.0);
+    }
+
+    public void testGetStockPriceForInvalidTicker() {
+    	try {
+    		webService.getStockPrice("INVALID");
+    		fail("Expected getStockPrice to throw an exception for invalid ticker");
+    	} catch (Exception e) {
+    	}
+    }
+
+    public void testGetStockPriceForTickerWithSpecialSymbols() {
+        try {
+        	webService.getStockPrice("!@#$%^&");
+            fail("Expected getStockPrice to throw an exception for invalid ticker");
+        } catch (Exception e) {
+        }
+    }
+    
+    public void testGetStockPriceForNullTicker() {
+        try {
+        	webService.getStockPrice(null);
+            fail("Expected getStockPrice to throw an exception for null ticker");
+        } catch (Exception e) {
+        }
+    }
+
+    public void testGetStockPriceForEmptyTicker() {
+        try {
+        	webService.getStockPrice("");
+            fail("Expected getStockPrice to throw an exception for null ticker");
+        } catch (Exception e) {
+        }
+    }
+        
+    public void testNetworkFailureForWebService() 
+    {
+        WebService webService = new WebService()
+        {
+            public double getStockPrice(String ticker) 
+            {
+                throw new RuntimeException();
+            }
+        };
+    	
+        try{
+        	webService.getStockPrice("GOOG");
+        	fail("Expected getStockPrice to throw an exception for network failure");
+        } catch (Exception e){
+        }
+    }
+}
